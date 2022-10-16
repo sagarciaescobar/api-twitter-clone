@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.sql.Time;
+
 @Document("users")
 @Data
 @Builder
@@ -13,7 +15,7 @@ public class User {
     private String id;
     private String name;
     private String username;
-    private String createdAt;
+    private Time createdAt;
     private String description;
     private String location;
     private String pinnedTweetId;
