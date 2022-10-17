@@ -1,7 +1,10 @@
 package com.twitter.tweets.domain;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.sql.Time;
 
+@Document("tweets")
 public class Tweet {
     private String id;
     private Time createdAt;
