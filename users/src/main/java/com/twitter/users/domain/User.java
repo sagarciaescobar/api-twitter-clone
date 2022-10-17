@@ -1,12 +1,13 @@
 package com.twitter.users.domain;
 
-import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
+import java.util.Date;
+
 
 @Document("users")
 @Data
@@ -16,7 +17,7 @@ public class User {
     private String id;
     private String name;
     private String username;
-    private Timestamp createdAt;
+    private Date createdAt;
     private String description;
     private String location;
     private String pinnedTweetId;

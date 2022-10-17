@@ -1,12 +1,17 @@
 package com.twitter.users.repository;
 
 import com.twitter.users.domain.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import com.twitter.users.exception.AlreadyExist;
+import com.twitter.users.exception.EmptyRequiredField;
+import com.twitter.users.exception.ResourceNotFound;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface IUserRepository extends MongoRepository<User,String> {
-    @Query("{username:'?0'}")
-    User findUserByUsername(String username);
+import java.util.List;
+
+public interface IUserRepository {
+
+    User findUserByUsername(String username) throws ResourceNotFound;
+    User save(User user) throws AlreadyExist, EmptyRequiredField;
+
+    List<User> searchUser(String q);
 }

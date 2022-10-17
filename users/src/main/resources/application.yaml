@@ -9,7 +9,7 @@ spring:
       uri: mongodb://localhost:27017
       database: twitter
 
-#eureka:
-#  client:
-#    service-url:
-#      default-url: http://localhost:8761/eureka
+eureka:
+  client:
+    service-url:
+      default-url: http://localhost:8761/eureka
