@@ -4,6 +4,17 @@ server:
 spring:
   application:
     name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: users
+          uri: http://localhost:8091
+          predicates:
+            - Path="/users/*","/users"
+  security:
+    user:
+      name: admin
+      password: 1234
 
 eureka:
   client:
