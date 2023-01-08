@@ -1,4 +1,4 @@
-package com.twitter.users.domain;
+package com.api.twitter.core.models;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,5 +8,5 @@ import lombok.Data;
 public class PublicMetrics {
     private Integer followersCount;
     private Integer followingCount;
-    private Integer tweetCount;
+    private  Integer tweetCount;
 }

@@ -1,4 +1,4 @@
-package com.twitter.tweets.domain;
+package com.api.twitter.core.models;
 
 import lombok.Builder;
 import lombok.Data;
