@@ -1,6 +1,6 @@
 .idea
-
 old
+old/*
 target
 .mvn
 mvnw
