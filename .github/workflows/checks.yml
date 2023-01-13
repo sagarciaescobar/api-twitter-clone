@@ -23,7 +23,7 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Build and Run test with Maven
-        run: mvn clean package site
+        run: mvn clean test
       - name: Add coverage
         id: jacoco
         uses: madrapps/jacoco-report@v1.3
