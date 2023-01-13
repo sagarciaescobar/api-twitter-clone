@@ -22,8 +22,8 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
+      - name: Build and Run test with Maven
+        run: mvn clean package site
   test:
     name: test
     needs: build
@@ -35,7 +35,7 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Run test
-        run: mvn clean install site
+        run: mvn clean test
       - name: Add coverage
         id: jacoco
         uses: madrapps/jacoco-report@v1.3
