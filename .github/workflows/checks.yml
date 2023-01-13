@@ -37,7 +37,7 @@ jobs:
           java-version: '17'
           cache: 'maven'
       - name: Run test
-        run: mvn site
+        run: mvn clean install site
       - name: Add coverage
         id: jacoco
         uses: madrapps/jacoco-report@v1.3
