@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Coverage Test Execution
         with:
-          path: .
+          path: ${{ github.workspace }}
         run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install
       - name: Upload target folder
         uses: actions/upload-artifact@v2
