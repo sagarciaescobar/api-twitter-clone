@@ -3,7 +3,6 @@ package com.api.twitter.core.entities;
 import com.api.twitter.core.emuns.Role;
 import com.api.twitter.core.models.PublicMetrics;
 import com.api.twitter.core.models.UserCredentials;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,13 +39,10 @@ public class User implements UserDetails {
     private Boolean protect;
     private PublicMetrics publicMetrics;
     private String BannerUrl;
-
     private Role role;
 
     @BsonIgnore
-    @JsonIgnore
     private UserCredentials credentials;
-
     private Boolean isAccountNonExpired;
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;

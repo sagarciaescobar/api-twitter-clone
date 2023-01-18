@@ -34,6 +34,7 @@ public class UserService implements IUserService {
     public Mono<UserDTO> addUser(RegisterUser user) {
         validatedRequiredFields(user, new String[]{"username", "firstName", "lastName", "protect", "password"});
         User newUser = mapper.map(user, User.class);
+
         // Default user data
         newUser.setIsAccountNonLocked(true);
         newUser.setIsAccountNonExpired(true);
