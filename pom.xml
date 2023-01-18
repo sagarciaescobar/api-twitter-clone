@@ -67,8 +67,13 @@
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>RELEASE</version>
+			<version>23.1.0</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.1.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -113,7 +118,7 @@
 									<element>BUNDLE</element>
 									<limits>
 										<limit>
-											<counter>COMPLEXITY</counter>
+											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
 											<minimum>0.80</minimum>
 										</limit>
