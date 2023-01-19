@@ -3,7 +3,8 @@ package com.api.twitter.exceptions.message;
 import java.util.Arrays;
 
 public enum BadFieldMessage {
-    REQUIRED("required %s is empty");
+    REQUIRED("required %s is empty"),
+    ALREADY("username %s already created");
 
     private final String message;
 
