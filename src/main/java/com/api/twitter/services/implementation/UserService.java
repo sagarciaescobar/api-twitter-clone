@@ -47,7 +47,6 @@ public class UserService implements IUserService {
         newUser.setCreatedAt(Date.valueOf(LocalDate.now()));
 
         Mono<Tuple2<User,Boolean>> res = userRepository.addUser(newUser)
-                .onErrorStop()
                 .zipWhen( savedUser -> {
                     UserCredentials credentials = UserCredentials.builder()
                             .id(savedUser.getId())
