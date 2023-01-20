@@ -12,6 +12,7 @@ import com.api.twitter.repositories.IUserRepository;
 import com.api.twitter.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -26,6 +27,7 @@ import static com.api.twitter.utils.ValidateField.*;
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
+    private final PasswordEncoder passwordEncoder;
     private final IUserRepository userRepository;
     private final ICredentialRepository credentialRepository;
     private final ModelMapper mapper;
@@ -40,7 +42,7 @@ public class UserService implements IUserService {
         newUser.setIsAccountNonExpired(true);
         newUser.setIsEnabled(true);
         newUser.setIsCredentialsNonExpired(true);
-        newUser.setRole(Role.USER);
+        newUser.setRole(Role.ROLE_USER);
         newUser.setPublicMetrics(new PublicMetrics(0,0,0));
         newUser.setCreatedAt(Date.valueOf(LocalDate.now()));
 
@@ -49,7 +51,7 @@ public class UserService implements IUserService {
                 .zipWhen( savedUser -> {
                     UserCredentials credentials = UserCredentials.builder()
                             .id(savedUser.getId())
-                            .credentials(List.of(user.getPassword())).build();
+                            .credentials(List.of(passwordEncoder.encode(user.getPassword()))).build();
                     return credentialRepository.addNewUserCredential(credentials);
                 });
 

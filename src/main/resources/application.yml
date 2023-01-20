@@ -5,3 +5,12 @@ spring:
     mongodb:
       uri: mongodb://root:root@localhost:27017
       database: twitter
+  webFlux:
+    jwt:
+      password:
+        encoder:
+          secret: testSecret
+          iteration: 2
+          keyLength: 256
+      secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
+      expiration: 28800

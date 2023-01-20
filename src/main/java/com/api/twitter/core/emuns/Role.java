@@ -1,8 +1,8 @@
 package com.api.twitter.core.emuns;
 
 public enum Role {
-    USER("USER"),
-    ADMIN("ADMIN");
+    ROLE_USER("USER"),
+    ROLE_ADMIN("ADMIN");
 
     private final String role;
 

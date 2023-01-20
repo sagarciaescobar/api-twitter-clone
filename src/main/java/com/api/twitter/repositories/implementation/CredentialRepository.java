@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+
 @Repository
 @RequiredArgsConstructor
 public class CredentialRepository implements ICredentialRepository {
@@ -30,8 +32,20 @@ public class CredentialRepository implements ICredentialRepository {
         return template.updateFirst(query,update,COLLECTION).map(res -> true);
     }
 
-    @Override
-    public Mono<UserCredentials> getById(String id) {
-        return template.findById(id,UserCredentials.class);
+    public Mono<UserCredentials> getCurrentById(String id) {
+        System.out.println("llego credentias");
+        System.out.println("reqId " + id);
+        System.out.println("63c9d77d8d3cc76c7e9ac6d6");
+        return template.findById(id,UserCredentials.class,COLLECTION)
+                .doOnSuccess(credentials -> {
+                    System.out.println(credentials);
+                })
+                .map(credentials -> {
+                    credentials.setCredentials(Collections.singletonList(credentials.getCredentials().get(credentials.getCredentials().size() - 1)));
+                    return credentials;
+                })
+                .doOnError(e -> {
+                    System.out.println(e.getMessage());
+                });
     }
 }

@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 public interface ICredentialRepository {
     Mono<Boolean> addNewUserCredential(UserCredentials credential);
     Mono<Boolean> addCredentialById(UserCredentials credentials);
-    Mono<UserCredentials> getById(String id);
+    Mono<UserCredentials> getCurrentById(String id);
 }

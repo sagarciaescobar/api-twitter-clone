@@ -3,7 +3,8 @@ package com.api.twitter.exceptions.message;
 import java.util.Arrays;
 
 public enum GeneralMessage {
-    GENERAL("something happened, contact with support");
+    GENERAL("something happened, contact with support"),
+    GENERAL_DB("something happened in db, contact with support");
 
     private final String message;
 
