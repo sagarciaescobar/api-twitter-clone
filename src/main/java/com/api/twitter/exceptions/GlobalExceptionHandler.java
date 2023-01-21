@@ -10,11 +10,11 @@ import org.springframework.web.server.ServerWebExchange;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<String> allErrors(Exception ex, ServerWebExchange web){
-//        log.error("General error["+ex.getMessage()+"] Path: " + web.getRequest().getPath());
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: "+ ex.getMessage());
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> allErrors(Exception ex, ServerWebExchange web){
+        log.error("General error["+ex.getMessage()+"] Path: " + web.getRequest().getPath());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: "+ ex.getMessage());
+    }
 
     @ExceptionHandler(BadField.class)
     public ResponseEntity<Error> badField(BadField ex, ServerWebExchange web){

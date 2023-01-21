@@ -1,4 +1,4 @@
-package com.api.twitter.entrypoints.Auths;
+package com.api.twitter.entrypoints.auths;
 
 import com.api.twitter.core.models.AuthRequest;
 import com.api.twitter.core.models.AuthResponse;

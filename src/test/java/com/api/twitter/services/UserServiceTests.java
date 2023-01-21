@@ -9,59 +9,41 @@ import com.api.twitter.core.models.UserCredentials;
 import com.api.twitter.repositories.implementation.CredentialRepository;
 import com.api.twitter.repositories.implementation.UserRepository;
 import com.api.twitter.services.implementation.UserService;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
-@ExtendWith(SpringExtension.class)
-public class TestUserService {
-    @TestConfiguration
-    public static class UserServiceTestConfiguration {
-        @MockBean
-        public PasswordEncoder passwordEncoder;
-        @MockBean
-        public UserRepository userRepository;
+@ExtendWith(MockitoExtension.class)
+public class UserServiceTests {
 
-        @MockBean
-        public CredentialRepository credentialRepository;
-
-        @MockBean
-        public ModelMapper mapper;
-
-        @Bean
-        public UserService userService() {
-            return new UserService(passwordEncoder, userRepository, credentialRepository, mapper);
-        }
-    }
-
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    @Autowired
+    @Mock
     private CredentialRepository credentialRepository;
 
-    @Autowired
+    @InjectMocks
     private UserService userService;
 
-    @Autowired
+    @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
+    @Mock
     private  ModelMapper mapper;
 
 
@@ -114,23 +96,23 @@ public class TestUserService {
                 .createdAt(Date.valueOf("2000-10-10"))
                 .profileImageUrl(url)
                 .build();
-        Mockito.when(userRepository.addUser(Mockito.isA(User.class)))
-                .thenReturn(Mono.just(repositoryUser));
 
-        Mockito.when(mapper.map(Mockito.any(), Mockito.any()))
-                        .thenReturn(repositoryUser);
+        when(userRepository.addUser(isA(User.class))).thenReturn(Mono.just(repositoryUser));
+        when(mapper.map(any(), any())).thenReturn(repositoryUser).thenReturn(expectedUser);
+        lenient().when(credentialRepository.addNewUserCredential(any())).thenReturn(Mono.just(true));
+        lenient().when(passwordEncoder.encode(any())).thenReturn("testEncoded");
 
-        Mockito.when(credentialRepository.addNewUserCredential(Mockito.any()))
-                        .thenReturn(Mono.just(true));
-
-        StepVerifier.create(userService.addUser(testUser))
-                        .expectNext(expectedUser);
+        StepVerifier
+                .create(userService.addUser(testUser).log())
+                        .expectNext(expectedUser)
+                .expectComplete()
+                .verify();
     }
 
     @Test
-    public void testRegisterUserThrowRuntimeException() {
-        String firstName = "firstName";
-        String lastName = "lastName";
+    public void testRegisterUserRejectCredentials() {
+        String firstName = "firstName1";
+        String lastName = "lastName2";
         String username = "test";
         String description = "test description about me";
         String location = "Test location";
@@ -166,27 +148,14 @@ public class TestUserService {
                 .isEnabled(true)
                 .isAccountNonLocked(true).build();
 
-        UserDTO expectedUser = UserDTO.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .description(description)
-                .publicMetrics(new PublicMetrics(0,0,0))
-                .protect(protect)
-                .location(location)
-                .createdAt(Date.valueOf("2000-10-10"))
-                .profileImageUrl(url)
-                .build();
-        Mockito.when(userRepository.addUser(Mockito.any()))
-                .thenReturn(Mono.just(repositoryUser));
+        when(userRepository.addUser(isA(User.class))).thenReturn(Mono.just(repositoryUser));
+        when(mapper.map(any(), any())).thenReturn(repositoryUser);
+        when(credentialRepository.addNewUserCredential(any())).thenReturn(Mono.just(false));
+        when(passwordEncoder.encode(any())).thenReturn("testEncoded");
 
-        Mockito.when(mapper.map(Mockito.any(), Mockito.any()))
-                .thenReturn(repositoryUser);
-
-        Mockito.when(credentialRepository.addNewUserCredential(Mockito.any()))
-                .thenReturn(Mono.just(false));
-
-        StepVerifier.create(userService.addUser(testUser))
-                .expectError()
-                .verifyThenAssertThat();
+        StepVerifier
+                .create(userService.addUser(testUser))
+                .expectErrorMatches(throwable -> throwable instanceof RuntimeException)
+                .verify();
     }
 }

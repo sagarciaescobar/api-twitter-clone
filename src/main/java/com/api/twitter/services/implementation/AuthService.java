@@ -7,12 +7,14 @@ import com.api.twitter.repositories.ICredentialRepository;
 import com.api.twitter.repositories.IUserRepository;
 import com.api.twitter.services.IAuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService implements IAuthService {
 
     private final PasswordEncoder passwordEncoder;
@@ -29,6 +31,7 @@ public class AuthService implements IAuthService {
                     System.out.println(t);
                     t.getT1().setCredentials(t.getT2());
                     System.out.println(passwordEncoder.matches(auth.getPassword(),t.getT1().getPassword()));
+                    log.info(t.getT1().getPassword());
                     return t.getT1();
                 })
                 .filter(user ->
@@ -36,7 +39,11 @@ public class AuthService implements IAuthService {
                 )
                 .doOnNext( user -> {
                     System.out.println(user);
-                    if (user == null) throw new RuntimeException("Invalid Username or password");
+                    log.info("entro " + user);
+                    if (user.getId() == null) {
+                        log.info("entro al if");
+                        throw new RuntimeException("Invalid Username or password");
+                    }
                 })
                 .map(user -> new AuthResponse(jwtUtil.generateToken(user)));
     }

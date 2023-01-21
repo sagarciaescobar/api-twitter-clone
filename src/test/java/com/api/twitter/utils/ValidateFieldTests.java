@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static com.api.twitter.utils.ValidateField.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestValidateField {
+public class ValidateFieldTests {
 
     @Test
     public void validatedFieldNotThrowException(){
