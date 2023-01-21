@@ -1,5 +1,6 @@
 package com.api.twitter.services;
 
+import com.api.twitter.configs.security.PBKDF2Encoder;
 import com.api.twitter.core.dto.UserDTO;
 import com.api.twitter.core.emuns.Role;
 import com.api.twitter.core.entities.User;
@@ -21,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -41,7 +41,7 @@ public class UserServiceTests {
     private UserService userService;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private PBKDF2Encoder encoder;
 
     @Mock
     private  ModelMapper mapper;
@@ -100,7 +100,7 @@ public class UserServiceTests {
         when(userRepository.addUser(isA(User.class))).thenReturn(Mono.just(repositoryUser));
         when(mapper.map(any(), any())).thenReturn(repositoryUser).thenReturn(expectedUser);
         lenient().when(credentialRepository.addNewUserCredential(any())).thenReturn(Mono.just(true));
-        lenient().when(passwordEncoder.encode(any())).thenReturn("testEncoded");
+        lenient().when(encoder.encode(any())).thenReturn("testEncoded");
 
         StepVerifier
                 .create(userService.addUser(testUser).log())

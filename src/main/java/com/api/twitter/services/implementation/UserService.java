@@ -1,5 +1,6 @@
 package com.api.twitter.services.implementation;
 
+import com.api.twitter.configs.security.PBKDF2Encoder;
 import com.api.twitter.core.dto.UserDTO;
 import com.api.twitter.core.emuns.Role;
 import com.api.twitter.core.entities.User;
@@ -27,7 +28,7 @@ import static com.api.twitter.utils.ValidateField.*;
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
-    private final PasswordEncoder passwordEncoder;
+    private final PBKDF2Encoder encoder;
     private final IUserRepository userRepository;
     private final ICredentialRepository credentialRepository;
     private final ModelMapper mapper;
@@ -50,7 +51,7 @@ public class UserService implements IUserService {
                 .zipWhen( savedUser -> {
                     UserCredentials credentials = UserCredentials.builder()
                             .id(savedUser.getId())
-                            .credentials(List.of(passwordEncoder.encode(user.getPassword()))).build();
+                            .credentials(List.of(encoder.encode(user.getPassword()))).build();
                     return credentialRepository.addNewUserCredential(credentials);
                 });
 
