@@ -30,7 +30,3 @@ jobs:
       - name: Test Coverage
         id: jacoco
         run: mvn verify
-      - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
