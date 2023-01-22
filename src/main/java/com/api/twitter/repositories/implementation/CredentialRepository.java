@@ -33,13 +33,7 @@ public class CredentialRepository implements ICredentialRepository {
     }
 
     public Mono<UserCredentials> getCurrentById(String id) {
-        System.out.println("llego credentias");
-        System.out.println("reqId " + id);
-        System.out.println("63c9d77d8d3cc76c7e9ac6d6");
         return template.findById(id,UserCredentials.class,COLLECTION)
-                .doOnSuccess(credentials -> {
-                    System.out.println(credentials);
-                })
                 .map(credentials -> {
                     credentials.setCredentials(Collections.singletonList(credentials.getCredentials().get(credentials.getCredentials().size() - 1)));
                     return credentials;

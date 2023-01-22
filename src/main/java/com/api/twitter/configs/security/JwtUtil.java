@@ -1,6 +1,5 @@
 package com.api.twitter.configs.security;
 
-import com.api.twitter.core.emuns.Role;
 import com.api.twitter.core.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

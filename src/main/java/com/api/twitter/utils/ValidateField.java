@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class ValidateField {
+    private ValidateField() {}
     public static void validatedRequiredFields(Object object, String[] requiredFields){
         Class<?> clazz = object.getClass();
         List<String> nullFields;

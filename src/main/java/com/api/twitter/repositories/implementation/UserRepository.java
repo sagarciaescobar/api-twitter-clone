@@ -33,7 +33,6 @@ public class UserRepository implements IUserRepository {
     @Override
     public Mono<User> getByUsername(String username) {
         Query query = new Query(Criteria.where("username").is(username));
-        System.out.println("llego");
         return template.findOne(query, User.class, USER_COLLECTION)
                 .doOnError(generalErrorInDB());
     }

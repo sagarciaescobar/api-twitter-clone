@@ -13,13 +13,13 @@ import com.api.twitter.services.implementation.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import reactor.core.publisher.Mono;
@@ -31,21 +31,15 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
 
-    @Mock
-    private UserRepository userRepository;
+    @Mock UserRepository userRepository;
 
-    @Mock
-    private CredentialRepository credentialRepository;
+    @Mock CredentialRepository credentialRepository;
 
-    @InjectMocks
-    private UserService userService;
+    @InjectMocks UserService userService;
 
-    @Mock
-    private PBKDF2Encoder encoder;
+    @Mock PBKDF2Encoder encoder;
 
-    @Mock
-    private  ModelMapper mapper;
-
+    @Spy ModelMapper mapper;
 
     @Test
     public void testRegisterUser() {
@@ -77,6 +71,7 @@ public class UserServiceTests {
                 .createdAt(Date.valueOf("2000-10-10"))
                 .description(description)
                 .location(location)
+                .publicMetrics(new PublicMetrics(0,0,0))
                 .profileImageUrl(url)
                 .protect(protect)
                 .credentials(credentials)
@@ -86,25 +81,14 @@ public class UserServiceTests {
                 .isEnabled(true)
                 .isAccountNonLocked(true).build();
 
-        UserDTO expectedUser = UserDTO.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .description(description)
-                .publicMetrics(new PublicMetrics(0,0,0))
-                .protect(protect)
-                .location(location)
-                .createdAt(Date.valueOf("2000-10-10"))
-                .profileImageUrl(url)
-                .build();
+        UserDTO expectedUser = mapper.map(repositoryUser, UserDTO.class);
 
         when(userRepository.addUser(isA(User.class))).thenReturn(Mono.just(repositoryUser));
-        when(mapper.map(any(), any())).thenReturn(repositoryUser).thenReturn(expectedUser);
-        lenient().when(credentialRepository.addNewUserCredential(any())).thenReturn(Mono.just(true));
-        lenient().when(encoder.encode(any())).thenReturn("testEncoded");
+        when(credentialRepository.addNewUserCredential(any())).thenReturn(Mono.just(true));
+        when(encoder.encode(any())).thenReturn("testEncoded");
 
-        StepVerifier
-                .create(userService.addUser(testUser).log())
-                        .expectNext(expectedUser)
+        StepVerifier.create(userService.addUser(testUser).log())
+                .expectNext(expectedUser)
                 .expectComplete()
                 .verify();
     }
@@ -129,29 +113,11 @@ public class UserServiceTests {
                 .protect(protect)
                 .password(password).build();
 
-        UserCredentials credentials = new UserCredentials("123test", List.of(password));
-
-        User repositoryUser = User.builder()
-                .id("123test")
-                .firstName(firstName)
-                .lastName(lastName)
-                .username(username)
-                .createdAt(Date.valueOf("2000-10-10"))
-                .description(description)
-                .location(location)
-                .profileImageUrl(url)
-                .protect(protect)
-                .credentials(credentials)
-                .role(Role.ROLE_USER)
-                .isAccountNonExpired(true)
-                .isCredentialsNonExpired(true)
-                .isEnabled(true)
-                .isAccountNonLocked(true).build();
+        User repositoryUser = mapper.map(testUser, User.class);
 
         when(userRepository.addUser(isA(User.class))).thenReturn(Mono.just(repositoryUser));
-        when(mapper.map(any(), any())).thenReturn(repositoryUser);
         when(credentialRepository.addNewUserCredential(any())).thenReturn(Mono.just(false));
-        when(passwordEncoder.encode(any())).thenReturn("testEncoded");
+        when(encoder.encode(any())).thenReturn("testEncoded");
 
         StepVerifier
                 .create(userService.addUser(testUser))

@@ -18,7 +18,6 @@ public class TweetRepository implements ITweetRepository {
     }
 
     public Mono<Tweet> getTweetById(String id) {
-        System.out.println(id);
         return template.findById(id,Tweet.class, COLLECTION);
     }
 }
