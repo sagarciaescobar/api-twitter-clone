@@ -16,7 +16,7 @@ public class ValidateField {
             try {
                 Field field = clazz.getDeclaredField(key);
                 field.setAccessible(true);
-                if (field.get(object) == null) return key;
+                if (field.get(object) == null || (object instanceof String && field.get(object) == "")) return key;
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 throw new RuntimeException(GeneralMessage.GENERAL.getMessage());
             }

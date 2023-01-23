@@ -19,6 +19,7 @@ public class AuthenticationManger implements ReactiveAuthenticationManager {
     private final JwtUtil jwtUtil;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Mono<Authentication> authenticate(Authentication authentication) {
         String authToken = authentication.getCredentials().toString();
         String username = jwtUtil.getUsernameFromToken(authToken);
@@ -28,12 +29,7 @@ public class AuthenticationManger implements ReactiveAuthenticationManager {
                 .map(valid -> {
                     Claims claims = jwtUtil.getAllClaimsFromToken(authToken);
                     List<String> roles;
-                    System.out.println(claims);
-                    if (claims != null) {
-                        roles = Collections.singletonList(claims.get("role", String.class));
-                    } else {
-                        roles = Collections.singletonList(jwtUtil.getRoleFromToken(authToken));
-                    }
+                    roles = claims.get("roles", List.class);
                     return new UsernamePasswordAuthenticationToken(username,null,
                             roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
                 });

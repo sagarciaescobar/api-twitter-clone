@@ -7,4 +7,5 @@ import reactor.core.publisher.Mono;
 
 public interface IUserService {
     Mono<UserDTO> addUser(RegisterUser user);
+    Mono<Boolean> availableUsername(String username);
 }

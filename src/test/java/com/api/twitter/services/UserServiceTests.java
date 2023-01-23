@@ -7,13 +7,14 @@ import com.api.twitter.core.entities.User;
 import com.api.twitter.core.models.PublicMetrics;
 import com.api.twitter.core.models.RegisterUser;
 import com.api.twitter.core.models.UserCredentials;
+import com.api.twitter.exceptions.BadField;
 import com.api.twitter.repositories.implementation.CredentialRepository;
 import com.api.twitter.repositories.implementation.UserRepository;
 import com.api.twitter.services.implementation.UserService;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.sql.Date;
+import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +39,8 @@ public class UserServiceTests {
 
     @InjectMocks UserService userService;
 
-    @Mock PBKDF2Encoder encoder;
+    @Mock
+    PBKDF2Encoder encoder;
 
     @Spy ModelMapper mapper;
 
@@ -48,7 +51,7 @@ public class UserServiceTests {
         String username = "test";
         String description = "test description about me";
         String location = "Test location";
-        String password = "testPassword";
+        String password = "testPassword#";
         Boolean protect = true;
         String url = "www.example.com/image";
         RegisterUser testUser = RegisterUser.builder()
@@ -75,7 +78,7 @@ public class UserServiceTests {
                 .profileImageUrl(url)
                 .protect(protect)
                 .credentials(credentials)
-                .role(Role.ROLE_USER)
+                .roles(Collections.singletonList(Role.ROLE_USER))
                 .isAccountNonExpired(true)
                 .isCredentialsNonExpired(true)
                 .isEnabled(true)
@@ -83,6 +86,7 @@ public class UserServiceTests {
 
         UserDTO expectedUser = mapper.map(repositoryUser, UserDTO.class);
 
+        when(userRepository.availableUsername(anyString())).thenReturn(Mono.just(true));
         when(userRepository.addUser(isA(User.class))).thenReturn(Mono.just(repositoryUser));
         when(credentialRepository.addNewUserCredential(any())).thenReturn(Mono.just(true));
         when(encoder.encode(any())).thenReturn("testEncoded");
@@ -100,7 +104,7 @@ public class UserServiceTests {
         String username = "test";
         String description = "test description about me";
         String location = "Test location";
-        String password = "testPassword";
+        String password = "testPassword#";
         Boolean protect = true;
         String url = "www.example.com/image";
         RegisterUser testUser = RegisterUser.builder()
@@ -115,6 +119,7 @@ public class UserServiceTests {
 
         User repositoryUser = mapper.map(testUser, User.class);
 
+        when(userRepository.availableUsername(anyString())).thenReturn(Mono.just(true));
         when(userRepository.addUser(isA(User.class))).thenReturn(Mono.just(repositoryUser));
         when(credentialRepository.addNewUserCredential(any())).thenReturn(Mono.just(false));
         when(encoder.encode(any())).thenReturn("testEncoded");
@@ -122,6 +127,25 @@ public class UserServiceTests {
         StepVerifier
                 .create(userService.addUser(testUser))
                 .expectErrorMatches(throwable -> throwable instanceof RuntimeException)
+                .verify();
+    }
+
+    @Test
+    public void validateAvailableUsername() {
+        String username = "test";
+        when(userRepository.availableUsername(anyString())).thenReturn(Mono.just(true));
+
+        StepVerifier
+                .create(userService.availableUsername(username))
+                .expectNext(true)
+                .verifyComplete();
+    }
+
+    @Test
+    public void validateEmptyAvailableUsername() {
+        String username = "";
+        StepVerifier.create(userService.availableUsername(username))
+                .expectError()
                 .verify();
     }
 }

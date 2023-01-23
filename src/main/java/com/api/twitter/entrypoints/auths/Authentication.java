@@ -16,7 +16,6 @@ public class Authentication {
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Mono<AuthResponse> login(AuthRequest auth){
-        System.out.println(auth);
         return service.requestJwt(auth);
     }
 }

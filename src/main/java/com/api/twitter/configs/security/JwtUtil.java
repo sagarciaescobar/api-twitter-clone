@@ -5,22 +5,29 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
 public class JwtUtil {
 
-    @Value("${spring.webFlux.jwt.secret}")
     private String secret;
 
-    @Value("${spring.webFlux.jwt.expiration}")
     private String expirationTime;
+
+
+    @Autowired
+    public JwtUtil(@Value("${spring.webFlux.jwt.secret}") String secret,@Value("${spring.webFlux.jwt.expiration}") String expirationTime){
+        this.secret= secret;
+        this.expirationTime = expirationTime;
+    }
 
     private Key key;
 
@@ -41,8 +48,9 @@ public class JwtUtil {
         return getAllClaimsFromToken(token).getExpiration();
     }
 
-    public String getRoleFromToken(String token) {
-        return (String) getAllClaimsFromToken(token).get("role");
+    @SuppressWarnings("unchecked")
+    public List<String> getRoleFromToken(String token) {
+        return (List<String>) getAllClaimsFromToken(token).get("roles",List.class);
     }
 
     private Boolean isTokenExpired(String token) {
@@ -52,13 +60,12 @@ public class JwtUtil {
 
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        System.out.println(user.getRole());
-        claims.put("role", user.getRole());
+        claims.put("roles", user.getRoles());
         return doGenerateToken(claims, user.getUsername());
     }
 
     private String doGenerateToken(Map<String, Object> claims, String username) {
-        Long expirationTimeLong = Long.parseLong(expirationTime);
+        long expirationTimeLong = Long.parseLong(expirationTime);
         final Date createdDate = new Date();
         final Date expirationDate = new Date(createdDate.getTime() + expirationTimeLong * 1000);
 

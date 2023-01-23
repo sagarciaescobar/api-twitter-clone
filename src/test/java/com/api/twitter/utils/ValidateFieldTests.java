@@ -21,8 +21,8 @@ public class ValidateFieldTests {
 
     @Test
     public void validatedFieldThrowException(){
-        User testUser = User.builder().id("test").build();
-        String[] testId = {"firstName"};
+        User testUser = User.builder().id("test").username("").build();
+        String[] testId = {"firstName","username"};
         assertThrows(BadField.class,() -> validatedRequiredFields(testUser,testId));
     }
 

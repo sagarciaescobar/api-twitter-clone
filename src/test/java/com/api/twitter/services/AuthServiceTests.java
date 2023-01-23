@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -26,7 +25,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTests {
 
-    @Mock PBKDF2Encoder encoder;
+    @Mock
+    PBKDF2Encoder encoder;
     @Mock JwtUtil jwtUtil;
     @Mock UserRepository userRepository;
     @Mock CredentialRepository credentialRepository;

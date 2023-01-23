@@ -4,7 +4,8 @@ import java.util.Arrays;
 
 public enum BadFieldMessage {
     REQUIRED("required %s is empty"),
-    ALREADY("username %s already created");
+    ALREADY("username %s already created"),
+    WRONG_INPUT("field %s is wrong, %s");
 
     private final String message;
 
@@ -13,6 +14,6 @@ public enum BadFieldMessage {
     }
 
     public String getMessage(String... params) {
-        return String.format(message, Arrays.stream(params).toList());
+        return String.format(message, (Object[]) params);
     }
 }

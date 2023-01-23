@@ -39,7 +39,7 @@ public class User implements UserDetails {
     private Boolean protect;
     private PublicMetrics publicMetrics;
     private String BannerUrl;
-    private Role role;
+    private List<Role> roles;
 
     @BsonIgnore
     private UserCredentials credentials;
@@ -51,7 +51,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.getRole()));
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getRole())).toList();
     }
 
     @Override
