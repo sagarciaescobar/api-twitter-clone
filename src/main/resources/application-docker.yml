@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      host: mongodb
+      password: root
+      username: root
+      port: 27017
+      database: twitter
+  webFlux:
+    jwt:
+      password:
+        encoder:
+          secret: ${ENCODER_SECRET}
+          iteration: ${ENCODER_ITERATION}
+          keyLength: ${ENCODER_KEY_LENGTH}
+      secret: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION}

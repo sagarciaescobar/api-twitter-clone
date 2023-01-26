@@ -12,3 +12,19 @@ services:
       - "27017:27017"
     volumes:
       - ./config/database:/docker-entrypoint-initdb.d
+      - mongoData:/data/db
+  api:
+    container_name: backend
+    build: .
+    environment:
+      ENCODER_SECRET: dockerTestSecret
+      ENCODER_ITERATION: 50
+      ENCODER_KEY_LENGTH: 256
+      JWT_SECRET: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
+      JWT_EXPIRATION: 28800
+    depends_on:
+      - mongodb
+    ports:
+      - "8080:8080"
+volumes:
+  mongoData:
