@@ -3,18 +3,16 @@ spring:
     name: twitter-clone-api
   data:
     mongodb:
-      uri: "mongodb://${spring.data.mongodb.username}:${spring.data.mongodb.password}@${spring.data.mongodb.host}:${spring.data.mongodb.port}"
-      host: localhost
-      password: root
-      username: root
-      port: 27017
+      uri: "mongodb+srv://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_URL}?retryWrites=true&w=majority"
+      password: "${DATABASE_PASSWORD}"
+      username: "${DATABASE_USERNAME}"
       database: twitter
   webFlux:
     jwt:
       password:
         encoder:
-          secret: testSecret
+          secret: "${JWT_SECRET}"
           iteration: 8
           keyLength: 256
-      secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
+      secret: "${JWT_ENCODER_SECRET}"
       expiration: 28800
