@@ -11,8 +11,8 @@ spring:
     jwt:
       password:
         encoder:
-          secret: "${JWT_SECRET}"
+          secret: "${JWT_ENCODER_SECRET}"
           iteration: 8
           keyLength: 256
-      secret: "${JWT_ENCODER_SECRET}"
+      secret: "${JWT_SECRET}"
       expiration: 28800
