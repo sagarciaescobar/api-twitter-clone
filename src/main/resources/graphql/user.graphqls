@@ -1,0 +1,55 @@
+
+interface user {
+    username: String!
+    firstName: String!
+    lastName: String!
+    description: String!
+    location: String!
+    profileImageUrl: String
+    protect: Boolean!
+    bannerUrl: String
+}
+
+input RegisterUser {
+    username: String!
+    firstName: String!
+    lastName: String!
+    description: String!
+    location: String!
+    profileImageUrl: String
+    protect: Boolean!
+    bannerUrl: String
+    password: String!
+}
+
+type User implements user{
+    id: ID!
+    username: String!
+    firstName: String!
+    lastName: String!
+    createdAt: String!
+    description: String!
+    location: String!
+    pinnedTweetId: String
+    profileImageUrl: String
+    protect: Boolean!
+    publicMetrics: PublicMetrics
+    bannerUrl: String
+    roles: [Role!]!
+    isAccountNonExpired: Boolean!
+    isAccountNonLocked: Boolean!
+    isCredentialsNonExpired: Boolean!
+    isEnabled: Boolean!
+}
+
+
+type PublicMetrics {
+    followersCount: Int
+    followingCount: Int
+    tweetCount: Int
+}
+
+enum Role {
+    USER
+    ADMIN
+}

@@ -1,4 +1,18 @@
 spring:
   data:
     mongodb:
-      database: twitter-test
+      database: twitterTest
+  graphql:
+    cors:
+      allowed-origins: "*"
+      allowed-methods: GET,POST
+      max-age: 1800s
+    schema:
+      printer:
+        enabled: true
+    graphiql:
+      enabled: true
+
+logging:
+  level:
+    graphql: DEBUG

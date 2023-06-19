@@ -1,0 +1,19 @@
+type Tweet {
+    id: ID
+    createAt: String
+    text: String
+    user: User
+    inReplyToStatusId: String
+    inReplyToUserId: String
+    coordinates: Coordinates
+    replyCount: Int
+    retweetCount: Int
+    favoriteCount: Int
+}
+
+
+
+type Coordinates {
+    coordinates: [Float]
+    type: String
+}

@@ -3,7 +3,7 @@ spring:
     name: twitter-clone-api
   data:
     mongodb:
-      uri: "mongodb+srv://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_URL}?retryWrites=true&w=majority"
+      uri: "mongodb+srv://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_URL}/${spring.data.mongodb.database}?retryWrites=true&w=majority"
       password: "${DATABASE_PASSWORD}"
       username: "${DATABASE_USERNAME}"
       database: twitter
